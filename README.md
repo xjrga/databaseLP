@@ -1,15 +1,14 @@
-Linear Programming Functions (Experimental)
+DBLP - Linear Programming Functions (Experimental)
 
 Features:
-   - solve linear programming problems
-   - solve linear programming problems in a database
+   - solve linear programming problems in a database environment
 
 Requirements:
    - Java 11
 
 Build
 
-    01
+    02
 
 Authors
 

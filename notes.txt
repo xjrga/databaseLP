@@ -1,16 +1,18 @@
 This runs fine.
-01_linearprogramming_procedures.sql
-02_model_schema.sql
-03_model_procedures.sql
-04_testProblem01.sql
-05_testProblem02.sql
-06_testProblem03.sql
-07_testProblem04.sql
-08_testProblem05.sql
-09_runTests.sql
-10_testProblem01UsesTables.sql
-11_testProblem02UsesTables.sql
-12_testProblem03UsesTables.sql
-13_testProblem04UsesTables.sql
-14_testProblem05UsesTables.sql
+0100_linearprogramming_procedures.sql
+0102_model_schema.sql
+0103_model_procedures.sql
+0104_testProblem01.sql
+0105_testProblem02.sql
+0106_testProblem03.sql
+0107_testProblem04.sql
+0108_testProblem05.sql
+0109_runTests.sql
+0110_testProblem01UsesTables.sql
+0111_testProblem02UsesTables.sql
+0112_testProblem03UsesTables.sql
+0113_testProblem04UsesTables.sql
+0114_testProblem05UsesTables.sql
+0200_linearprogramming_procedures.sql
+0201_test01.sql
 

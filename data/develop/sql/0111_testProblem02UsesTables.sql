@@ -24,11 +24,11 @@ call addConstraint(1,2,'Process 3',2,40);
 call addConstraintCoefficient(1,2,0,5);
 call addConstraintCoefficient(1,2,1,8);
 --Run
-CALL LinearProgramming.createModel();
-CALL LinearProgramming.setMaximize();
+CALL LP1.createModel();
+CALL LP1.setMaximize();
 --
-CALL LinearProgramming.setNumberOfVariables(2);
-CALL LinearProgramming.setNumberOfConstraints(3);
+CALL LP1.setNumberOfVariables(2);
+CALL LP1.setNumberOfConstraints(3);
 --
 call solveModel(1);
 --Save
@@ -38,5 +38,5 @@ call getProblemValue(1);
 call getVariableValue(1);
 call getConstraintValue(1);
 --
-CALL LinearProgramming.clean();
+CALL LP1.clean();
 --

@@ -31,11 +31,11 @@ call addConstraintCoefficient(4,2,1,4);
 call addConstraintCoefficient(4,2,2,1);
 --
 --Run
-CALL LinearProgramming.createModel();
-CALL LinearProgramming.setMaximize();
+CALL LP1.createModel();
+CALL LP1.setMaximize();
 --
-CALL LinearProgramming.setNumberOfVariables(3);
-CALL LinearProgramming.setNumberOfConstraints(3);
+CALL LP1.setNumberOfVariables(3);
+CALL LP1.setNumberOfConstraints(3);
 --
 call solveModel(4);
 --Save
@@ -45,5 +45,5 @@ call getProblemValue(4);
 call getVariableValue(4);
 call getConstraintValue(4);
 --
-CALL LinearProgramming.clean();
+CALL LP1.clean();
 --

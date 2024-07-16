@@ -194,13 +194,13 @@ DECLARE solutionConstraintLhsSolutionValue DOUBLE;
 DECLARE n INTEGER;
 DECLARE solutionPointValueAt DOUBLE;
 --
-SET solutionCost = LinearProgramming.getSolutionCost();
-SET lpformatModel = LinearProgramming.printModel();
+SET solutionCost = LP1.getSolutionCost();
+SET lpformatModel = LP1.printModel();
 SET n = 0;
 --
 FOR SELECT variableid FROM variable WHERE problemid = v_problemId DO
 --
-SELECT LinearProgramming.getSolutionPointValueAt(n) INTO solutionPointValueAt FROM (VALUES(0));
+SELECT LP1.getSolutionPointValueAt(n) INTO solutionPointValueAt FROM (VALUES(0));
 CALL updateVariable(v_problemId,variableid,solutionPointValueAt);
 SET n = n + 1;
 --
@@ -250,29 +250,29 @@ DECLARE v_constraint_relationship INTEGER;
 DECLARE v_constraint_value DOUBLE;
 DECLARE v_ConstraintId INTEGER;
 --
-CALL  LinearProgramming.addCoefficientSpace(-459);
-CALL  LinearProgramming.setCoefficientSpace(-459);
+CALL  LP1.addCoefficientSpace(-459);
+CALL  LP1.setCoefficientSpace(-459);
 FOR SELECT CoefficientValue FROM Objective WHERE ProblemId = v_ProblemId ORDER BY VariableId DO
-CALL  LinearProgramming.addCoefficient(CoefficientValue);
+CALL  LP1.addCoefficient(CoefficientValue);
 END FOR;
 --
-CALL  LinearProgramming.addLinearObjectiveFunction(-459);
+CALL  LP1.addLinearObjectiveFunction(-459);
 --
 FOR SELECT ConstraintId FROM ConstraintRhs WHERE ProblemId = v_ProblemId ORDER BY ConstraintId  DO
 SET v_ConstraintId = ConstraintId;
-CALL  LinearProgramming.addCoefficientSpace(v_ConstraintId);
-CALL  LinearProgramming.setCoefficientSpace(v_ConstraintId);
+CALL  LP1.addCoefficientSpace(v_ConstraintId);
+CALL  LP1.setCoefficientSpace(v_ConstraintId);
 FOR SELECT VariableId,CoefficientValue FROM ConstraintLhs  WHERE ProblemId = v_ProblemId AND ConstraintId = v_ConstraintId ORDER BY VariableId DO
-CALL  LinearProgramming.addCoefficient(CoefficientValue);
+CALL  LP1.addCoefficient(CoefficientValue);
 END FOR;
 SET v_constraint_relationship = getConstraintRelationship(v_problemId,v_ConstraintId);
 SET v_constraint_value = getConstraintValue(v_problemId,v_ConstraintId);
 --
-CALL  LinearProgramming.addLinearConstraint(v_ConstraintId, v_constraint_relationship, v_constraint_value);
+CALL  LP1.addLinearConstraint(v_ConstraintId, v_constraint_relationship, v_constraint_value);
 --
 END FOR;
 --
-CALL LinearProgramming.solveModel();
+CALL LP1.solveModel();
 --
 END;
 /

@@ -6,10 +6,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.xjrga</groupId>
-    <artifactId>linearprogrammingfunctions</artifactId>
-    <version>01</version>
+    <artifactId>dblp</artifactId>
+    <version>02</version>
 
-    <name>linearprogrammingfunctions</name>
+    <name>dblp</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
