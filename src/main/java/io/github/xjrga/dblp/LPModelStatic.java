@@ -1,128 +1,52 @@
 package io.github.xjrga.dblp;
 
 import java.sql.Array;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 /**
  * @author Jorge R Garcia de Alba &lt;jorge.r.garciadealba@gmail.com&gt;
  */
 public class LPModelStatic {
 
-  private static final Map<Long, LPModelConcrete> map = new HashMap();
+  private static final LPModelConcrete INSTANCE = LPModelConcrete.INSTANCE;
 
   public LPModelStatic() {}
 
-  public static void setNumberOfVariables(int n) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.setNumberOfVariables(n);
+  public static void addLinearObjectiveFunction(Array coefficients) {
+    INSTANCE.addLinearObjectiveFunction(toPrimitiveDouble(coefficients));
   }
 
-  public static void setNumberOfConstraints(int n) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.setNumberOfConstraints(n);
+  public static void addLinearConstraint(Array coefficients, int rel, double amount) {
+    INSTANCE.addLinearConstraint(toPrimitiveDouble(coefficients), rel, amount);
   }
 
-  public static void clean() {
-    map.remove(getThreadId());
-  }
-
-  public static void createModel() {
-    map.put(getThreadId(), new LPModelConcrete());
-  }
-
-  public static void addLinearObjectiveFunction(int storageId) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.addLinearObjectiveFunction(storageId);
-  }
-
-  public static void addLinearConstraint(int storageId, int rel, double amount) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.addLinearConstraint(storageId, rel, amount);
-  }
-
-  public static void setMaximize() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.setMaximize();
-  }
-
-  public static void solveModel() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.solveModel();
-  }
-
-  public static String printModel() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.printModel();
-  }
-
-  public static void addCoefficientSpace(int storageId) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.addCoefficientSpace(storageId);
-  }
-
-  public static void setCoefficientSpace(int storageId) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.setCoefficientSpace(storageId);
-  }
-
-  public static void addCoefficient(double coefficient) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    lpm.addCoefficient(coefficient);
+  public static void solve() {
+    INSTANCE.solve();
   }
 
   public static Array getSolutionPoint() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getSolutionPoint();
-  }
-
-  public static double getSolutionPointValueAt(int x) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getSolutionPointValueAt(x);
+    return INSTANCE.getSolutionPoint();
   }
 
   public static double getSolutionCost() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getSolutionCost();
+    return INSTANCE.getSolutionCost();
   }
 
-  public static int getVariableCount() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getVariableCount();
+  public static void clean() {
+    INSTANCE.clean();
   }
 
-  public static int getConstraintCount() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getConstraintCount();
-  }
-
-  public static Array getLhsByConstraint(int y) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getLhsByConstraint(y);
-  }
-
-  public static Array getLhsByVariable(int x) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getLhsByVariable(x);
-  }
-
-  public static double getLhsValueAt(int y, int x) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getLhsValueAt(y, x);
-  }
-
-  public static Array getRhs() {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getRhs();
-  }
-
-  public static double getRhsByConstraint(int y) {
-    LPModelConcrete lpm = map.get(getThreadId());
-    return lpm.getRhsByConstraint(y);
-  }
-
-  private static long getThreadId() {
-    long id = Thread.currentThread().getId();
-    return id;
+  private static double[] toPrimitiveDouble(Array a) {
+    double[] c = null;
+    try {
+      Object[] o = (Object[]) a.getArray();
+      c = new double[o.length];
+      for (int i = 0; i < o.length; i++) {
+        c[i] = (Double) o[i];
+      }
+    } catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return c;
   }
 }

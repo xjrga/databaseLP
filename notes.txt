@@ -1,18 +1,5 @@
 This runs fine.
 0100_linearprogramming_procedures.sql
-0102_model_schema.sql
-0103_model_procedures.sql
-0104_testProblem01.sql
-0105_testProblem02.sql
-0106_testProblem03.sql
-0107_testProblem04.sql
-0108_testProblem05.sql
-0109_runTests.sql
-0110_testProblem01UsesTables.sql
-0111_testProblem02UsesTables.sql
-0112_testProblem03UsesTables.sql
-0113_testProblem04UsesTables.sql
-0114_testProblem05UsesTables.sql
-0200_linearprogramming_procedures.sql
-0201_test01.sql
+0101_test01.sql
+
 

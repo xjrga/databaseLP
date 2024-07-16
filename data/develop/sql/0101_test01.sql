@@ -1,4 +1,4 @@
-SET SCHEMA LP2;
+SET SCHEMA LP;
 /
 CREATE PROCEDURE test01 (
 )
@@ -15,8 +15,8 @@ DECLARE v_constraint0_amount DOUBLE;
 DECLARE v_constraint1_coeffs DOUBLE ARRAY;
 DECLARE v_constraint1_amount DOUBLE;
 --
-DECLARE solutionCost CURSOR FOR SELECT LP2.getSolutionCost() as SolutionCost FROM (VALUES(0));
-DECLARE solutionPoint CURSOR FOR SELECT LP2.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
+DECLARE solutionCost CURSOR FOR SELECT LP.getSolutionCost() as SolutionCost FROM (VALUES(0));
+DECLARE solutionPoint CURSOR FOR SELECT LP.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
 --
 SET v_geq = 1;
 SET v_leq = 2;
@@ -27,18 +27,18 @@ SET v_constraint0_amount = 40;
 SET v_constraint1_coeffs = ARRAY[-2,1];
 SET v_constraint1_amount = 0;
 
-CALL LP2.addLinearObjectiveFunction(v_objective_coeffs);
+CALL LP.addLinearObjectiveFunction(v_objective_coeffs);
 --
-CALL LP2.addLinearConstraint(v_constraint0_coeffs, v_geq, v_constraint0_amount);
+CALL LP.addLinearConstraint(v_constraint0_coeffs, v_geq, v_constraint0_amount);
 --
-CALL LP2.addLinearConstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
+CALL LP.addLinearConstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
 --
-CALL LP2.solve();
+CALL LP.solve();
 --
 OPEN solutionCost;
 OPEN solutionPoint;
 --
-CALL LP2.clean();
+CALL LP.clean();
 --
 END;
 /
