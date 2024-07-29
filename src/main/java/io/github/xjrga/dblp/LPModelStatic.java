@@ -49,4 +49,8 @@ public class LPModelStatic {
     }
     return c;
   }
+
+  public static boolean solved() {
+    return INSTANCE.solved();
+  }
 }

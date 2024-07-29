@@ -1,5 +1,16 @@
-This runs fine.
-0100_linearprogramming_procedures.sql
-0101_test01.sql
+Notes
+-----
 
+Scripts
+-
+print.sh generates output.sql
+startDatabase.sh starts hsqldb memory database
+stopDatabase.sh stops hsqldb memory database
+solve.sh solves linear programming models
 
+Database Connection Parameters
+-
+url: jdbc:hsqldb:hsql://localhost/database
+driver: org.hsqldb.jdbc.JDBCDriver
+username: 
+password:

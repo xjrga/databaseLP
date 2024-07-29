@@ -2,7 +2,7 @@
   * Java 11 or higher
 
 #### Installation
-1. Create dblp-03-app.zip package using maven
-2. Unzip dblp-03-app.zip
+1. Create dblp-04-app.zip package using maven
+2. Unzip dblp-04-app.zip
 3. Start database by executing startDatabase.sh script
-2. Solve linear programming problems by loading data/develop/sql scripts in order using your favorite database tool
+4. Run output.sql script in your favorite database tool

@@ -22,6 +22,7 @@ public enum LPModelConcrete implements LPModel {
   public final int GEQ = 1;
   public final int LEQ = 2;
   public final int EQ = 3;
+  private boolean flag = true;
   private LinearObjectiveFunction linearObjectiveFunction = null;
   private final ArrayList<LinearConstraint> constraints = new ArrayList();
   private double cost = Double.NEGATIVE_INFINITY;
@@ -40,16 +41,21 @@ public enum LPModelConcrete implements LPModel {
 
   @Override
   public void solve() {
-    SimplexSolver s = new SimplexSolver();
-    LinearConstraintSet linearConstraintSet = new LinearConstraintSet(constraints);
-    NonNegativeConstraint nonNegativeConstraint = new NonNegativeConstraint(true);
-    OptimizationData[] data =
-        new OptimizationData[] {
-          linearObjectiveFunction, linearConstraintSet, GoalType.MINIMIZE, nonNegativeConstraint
-        };
-    PointValuePair optimize = s.optimize(data);
-    point = optimize.getPoint();
-    cost = optimize.getSecond();
+    try {
+      SimplexSolver s = new SimplexSolver();
+      LinearConstraintSet linearConstraintSet = new LinearConstraintSet(constraints);
+      NonNegativeConstraint nonNegativeConstraint = new NonNegativeConstraint(true);
+      OptimizationData[] data =
+          new OptimizationData[] {
+            linearObjectiveFunction, linearConstraintSet, GoalType.MINIMIZE, nonNegativeConstraint
+          };
+      PointValuePair optimize = s.optimize(data);
+      point = optimize.getPoint();
+      cost = optimize.getSecond();
+    } catch (Exception e) {
+      flag = false;
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -58,6 +64,7 @@ public enum LPModelConcrete implements LPModel {
     constraints.clear();
     cost = Double.NEGATIVE_INFINITY;
     point = new double[] {Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY};
+    flag = true;
   }
 
   @Override
@@ -96,5 +103,9 @@ public enum LPModelConcrete implements LPModel {
         break;
     }
     return relationship;
+  }
+
+  public boolean solved() {
+    return flag;
   }
 }

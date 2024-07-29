@@ -1,14 +1,16 @@
-DBLP - Linear Programming Functions (Experimental)
+databaseLP (Experimental)
 
 Features:
-   - solve linear programming problems in a database environment
+
+   - Solve linear programming problem using PL/SQL and Apache Commons Mathematics Library in HSQLDB 
 
 Requirements:
+
    - Java 11
 
 Build
 
-    03
+    04
 
 Authors
 
@@ -20,7 +22,9 @@ License
 
 Acknowledgments
 
-Snack uses the following libraries:
+databaseLP uses the following libraries:
 
     commons-math3-3.6.1.jar
     hsqldb-2.7.3.jar
+    sqltool-2.7.3.jar
+    dblp-04.jar
