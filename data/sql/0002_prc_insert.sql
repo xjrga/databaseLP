@@ -1,48 +1,48 @@
-CREATE PROCEDURE Message_insert (
-IN v_txt LONGVARCHAR
+create procedure message_insert (
+in v_txt longvarchar
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Message (
+modifies sql data begin atomic
+insert into message (
 txt
-) VALUES (
+) values (
 v_txt
 );
-END;
+end;
 /
-CREATE PROCEDURE Relationship_insert (
-IN v_relationshipId INTEGER,
-IN v_name LONGVARCHAR
+create procedure relationship_insert (
+in v_relationshipid integer,
+in v_name longvarchar
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Relationship (
-relationshipId,
+modifies sql data begin atomic
+insert into relationship (
+relationshipid,
 name
-) VALUES (
-v_relationshipId,
+) values (
+v_relationshipid,
 v_name
 );
-END;
+end;
 /
-CREATE PROCEDURE Restriction_insert (
-IN v_restrictionId INTEGER,
-IN v_name LONGVARCHAR,
-IN v_relationshipId INTEGER,
-IN v_q DOUBLE,
-IN v_coeffs DOUBLE ARRAY
+create procedure restriction_insert (
+in v_restrictionid integer,
+in v_name longvarchar,
+in v_relationshipid integer,
+in v_q double,
+in v_coeffs double array
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Restriction (
-restrictionId,
+modifies sql data begin atomic
+insert into restriction (
+restrictionid,
 name,
-relationshipId,
+relationshipid,
 q,
 coeffs
-) VALUES (
-v_restrictionId,
+) values (
+v_restrictionid,
 v_name,
-v_relationshipId,
+v_relationshipid,
 v_q,
 v_coeffs
 );
-END;
+end;
 /

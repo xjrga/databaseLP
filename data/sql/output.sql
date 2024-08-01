@@ -1,310 +1,321 @@
-DROP SCHEMA LP IF EXISTS CASCADE;
+drop schema lp if exists cascade;
 /
-CREATE SCHEMA LP;
+create schema lp;
 /
-SET SCHEMA LP;
+set schema lp;
 /
-CREATE TABLE Message
+
+
+create table message
 (
-        Txt LONGVARCHAR
+        txt longvarchar
 );
 /
-CREATE TABLE Relationship
+create table relationship
 (
-        relationshipId INTEGER,
-        name LONGVARCHAR,
-        CONSTRAINT Relationship_primary_key PRIMARY KEY (relationshipId)
+        relationshipid integer,
+        name longvarchar,
+        constraint relationship_primary_key primary key (relationshipid)
 );
 /
-CREATE TABLE Restriction
+create table restriction
 (
-        restrictionId INTEGER,
-        name LONGVARCHAR,
-        relationshipId INTEGER,
-        q DOUBLE,
-        coeffs DOUBLE ARRAY DEFAULT ARRAY[],
-        CONSTRAINT Restriction_primary_key PRIMARY KEY (restrictionId)
+        restrictionid integer,
+        name longvarchar,
+        relationshipid integer,
+        q double,
+        coeffs double array default array[],
+        constraint restriction_primary_key primary key (restrictionid)
 );
 /
 
-ALTER TABLE Restriction ADD CONSTRAINT R1_Restriction FOREIGN KEY (relationshipId) REFERENCES Relationship (relationshipId) ON DELETE SET NULL;
+alter table restriction add constraint r1_restriction foreign key (relationshipid) references relationship (relationshipid) on delete set null;
 /
 
-CREATE PROCEDURE Message_insert (
-IN v_txt LONGVARCHAR
+create procedure message_insert (
+in v_txt longvarchar
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Message (
+modifies sql data begin atomic
+insert into message (
 txt
-) VALUES (
+) values (
 v_txt
 );
-END;
+end;
 /
-CREATE PROCEDURE Relationship_insert (
-IN v_relationshipId INTEGER,
-IN v_name LONGVARCHAR
+create procedure relationship_insert (
+in v_relationshipid integer,
+in v_name longvarchar
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Relationship (
-relationshipId,
+modifies sql data begin atomic
+insert into relationship (
+relationshipid,
 name
-) VALUES (
-v_relationshipId,
+) values (
+v_relationshipid,
 v_name
 );
-END;
+end;
 /
-CREATE PROCEDURE Restriction_insert (
-IN v_restrictionId INTEGER,
-IN v_name LONGVARCHAR,
-IN v_relationshipId INTEGER,
-IN v_q DOUBLE,
-IN v_coeffs DOUBLE ARRAY
+create procedure restriction_insert (
+in v_restrictionid integer,
+in v_name longvarchar,
+in v_relationshipid integer,
+in v_q double,
+in v_coeffs double array
 )
-MODIFIES SQL DATA BEGIN ATOMIC
-INSERT INTO Restriction (
-restrictionId,
+modifies sql data begin atomic
+insert into restriction (
+restrictionid,
 name,
-relationshipId,
+relationshipid,
 q,
 coeffs
-) VALUES (
-v_restrictionId,
+) values (
+v_restrictionid,
 v_name,
-v_relationshipId,
+v_relationshipid,
 v_q,
 v_coeffs
 );
-END;
+end;
 /
 
 CREATE PROCEDURE clean()
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.clean'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.clean'
 /
 CREATE PROCEDURE addLinearObjectiveFunction(IN c DOUBLE ARRAY)
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.addLinearObjectiveFunction'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.addLinearObjectiveFunction'
 /
 CREATE PROCEDURE addLinearConstraint(IN c DOUBLE ARRAY, IN rel INT, IN amount DOUBLE)
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.addLinearConstraint'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.addLinearConstraint'
 /
 CREATE PROCEDURE solve()
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.solve'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.solve'
 /
 CREATE FUNCTION getSolutionPoint() RETURNS DOUBLE ARRAY
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.getSolutionPoint'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.getSolutionPoint'
 /
 CREATE FUNCTION getSolutionCost() RETURNS DOUBLE
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.getSolutionCost'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.getSolutionCost'
 /
 CREATE FUNCTION solved() RETURNS BOOLEAN
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.solved'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.solved'
 /
 
-CREATE PROCEDURE test01 (
+create procedure test01 (
 )
-MODIFIES SQL DATA DYNAMIC RESULT SETS 2
+modifies sql data dynamic result sets 2
 --
-BEGIN ATOMIC
+begin atomic
 --
-DECLARE v_geq INT;
-DECLARE v_leq INT;
-DECLARE v_eq INT;
-DECLARE v_objective_coeffs DOUBLE ARRAY;
-DECLARE v_constraint0_coeffs DOUBLE ARRAY;
-DECLARE v_constraint0_amount DOUBLE;
-DECLARE v_constraint1_coeffs DOUBLE ARRAY;
-DECLARE v_constraint1_amount DOUBLE;
-DECLARE v_constraint2_coeffs DOUBLE ARRAY;
-DECLARE v_constraint2_amount DOUBLE;
-DECLARE ok BOOLEAN;
+declare v_geq int;
+declare v_leq int;
+declare v_eq int;
+declare v_objective_coeffs double array;
+declare v_constraint0_coeffs double array;
+declare v_constraint0_amount double;
+declare v_constraint1_coeffs double array;
+declare v_constraint1_amount double;
+declare v_constraint2_coeffs double array;
+declare v_constraint2_amount double;
+declare ok boolean;
 --
-DECLARE solutionCost CURSOR FOR SELECT LP.getSolutionCost() as SolutionCost FROM (VALUES(0));
-DECLARE solutionPoint CURSOR FOR SELECT LP.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
-DECLARE solved CURSOR FOR SELECT LP.solved() as solved FROM (VALUES(0));
+declare solutioncost cursor for select lp.getsolutioncost() as solutioncost from (values(0));
+declare solutionpoint cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solved cursor for select lp.solved() as solved from (values(0));
+declare solutionpoint_array cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solutionpoint_table cursor for select c2 as variable, c1 as value from unnest(lp.getsolutionpoint()) with ordinality;
 --
-SET v_geq = 1;
-SET v_leq = 2;
-SET v_eq = 3;
-SET v_objective_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
-SET v_constraint0_coeffs = ARRAY[0.3102,0,0];
-SET v_constraint0_amount = 100;
-SET v_constraint1_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
-SET v_constraint1_amount = 2000;
-SET v_constraint2_coeffs = ARRAY[0,0.033,0.018];
-SET v_constraint2_amount = 40;
+set v_geq = 1;
+set v_leq = 2;
+set v_eq = 3;
+set v_objective_coeffs = array[1.7792400000000002,0.30396,1.05214];
+set v_constraint0_coeffs = array[0.3102,0,0];
+set v_constraint0_amount = 100;
+set v_constraint1_coeffs = array[1.7792400000000002,0.30396,1.05214];
+set v_constraint1_amount = 2000;
+set v_constraint2_coeffs = array[0,0.033,0.018];
+set v_constraint2_amount = 40;
 
-CALL LP.addLinearObjectiveFunction(v_objective_coeffs);
+call lp.addlinearobjectivefunction(v_objective_coeffs);
 --
-CALL LP.addLinearConstraint(v_constraint0_coeffs, v_eq, v_constraint0_amount);
+call lp.addlinearconstraint(v_constraint0_coeffs, v_eq, v_constraint0_amount);
 --
-CALL LP.addLinearConstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
+call lp.addlinearconstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
 --
-CALL LP.addLinearConstraint(v_constraint2_coeffs, v_eq, v_constraint2_amount);
+call lp.addlinearconstraint(v_constraint2_coeffs, v_eq, v_constraint2_amount);
 --
-CALL LP.solve();
+call lp.solve();
 --
-SET ok = LP.solved();
+set ok = lp.solved();
 --
-IF ok THEN
+if ok then
 --
-CALL Message_insert('true');
+call message_insert('true');
 --
-ELSE
+else
 --
-CALL Message_insert('false');
+call message_insert('false');
 --
-END IF;
+end if;
 --
-OPEN solved;
-OPEN solutionCost;
-OPEN solutionPoint;
+open solved;
+open solutioncost;
+open solutionpoint_array;
+open solutionpoint_table;
 --
-CALL LP.clean();
+call lp.clean();
 --
-END;
+end;
 /
 
-CREATE PROCEDURE test02 (
+create procedure test02 (
 )
-MODIFIES SQL DATA DYNAMIC RESULT SETS 2
+modifies sql data dynamic result sets 2
 --
-BEGIN ATOMIC
+begin atomic
 --
-DECLARE v_geq INT;
-DECLARE v_leq INT;
-DECLARE v_eq INT;
-DECLARE v_objective_coeffs DOUBLE ARRAY;
-DECLARE v_constraint0_coeffs DOUBLE ARRAY;
-DECLARE v_constraint0_amount DOUBLE;
-DECLARE v_constraint1_coeffs DOUBLE ARRAY;
-DECLARE v_constraint1_amount DOUBLE;
-DECLARE v_constraint2_coeffs DOUBLE ARRAY;
-DECLARE v_constraint2_amount DOUBLE;
-DECLARE ok BOOLEAN;
+declare v_geq int;
+declare v_leq int;
+declare v_eq int;
+declare v_objective_coeffs double array;
+declare v_constraint0_coeffs double array;
+declare v_constraint0_amount double;
+declare v_constraint1_coeffs double array;
+declare v_constraint1_amount double;
+declare v_constraint2_coeffs double array;
+declare v_constraint2_amount double;
+declare ok boolean;
 --
-DECLARE solutionCost CURSOR FOR SELECT LP.getSolutionCost() as SolutionCost FROM (VALUES(0));
-DECLARE solutionPoint CURSOR FOR SELECT LP.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
-DECLARE solved CURSOR FOR SELECT LP.solved() as solved FROM (VALUES(0));
+declare solutioncost cursor for select lp.getsolutioncost() as solutioncost from (values(0));
+declare solutionpoint cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solved cursor for select lp.solved() as solved from (values(0));
+declare solutionpoint_array cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solutionpoint_table cursor for select c2 as variable, c1 as value from unnest(lp.getsolutionpoint()) with ordinality;
 --
-SET v_geq = 1;
-SET v_leq = 2;
-SET v_eq = 3;
-SET v_objective_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
-SET v_constraint0_coeffs = ARRAY[0.3102,0,0];
-SET v_constraint0_amount = 100;
-SET v_constraint1_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
-SET v_constraint1_amount = 500;
-SET v_constraint2_coeffs = ARRAY[0,0.033,0.018];
-SET v_constraint2_amount = 40;
+set v_geq = 1;
+set v_leq = 2;
+set v_eq = 3;
+set v_objective_coeffs = array[1.7792400000000002,0.30396,1.05214];
+set v_constraint0_coeffs = array[0.3102,0,0];
+set v_constraint0_amount = 100;
+set v_constraint1_coeffs = array[1.7792400000000002,0.30396,1.05214];
+set v_constraint1_amount = 500;
+set v_constraint2_coeffs = array[0,0.033,0.018];
+set v_constraint2_amount = 40;
 
-CALL LP.addLinearObjectiveFunction(v_objective_coeffs);
+call lp.addlinearobjectivefunction(v_objective_coeffs);
 --
-CALL LP.addLinearConstraint(v_constraint0_coeffs, v_eq, v_constraint0_amount);
+call lp.addlinearconstraint(v_constraint0_coeffs, v_eq, v_constraint0_amount);
 --
-CALL LP.addLinearConstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
+call lp.addlinearconstraint(v_constraint1_coeffs, v_eq, v_constraint1_amount);
 --
-CALL LP.addLinearConstraint(v_constraint2_coeffs, v_eq, v_constraint2_amount);
+call lp.addlinearconstraint(v_constraint2_coeffs, v_eq, v_constraint2_amount);
 --
-CALL LP.solve();
+call lp.solve();
 --
-SET ok = LP.solved();
+set ok = lp.solved();
 --
-IF ok THEN
+if ok then
 --
-CALL Message_insert('true');
+call message_insert('true');
 --
-ELSE
+else
 --
-CALL Message_insert('false');
+call message_insert('false');
 --
-END IF;
+end if;
 --
-OPEN solved;
-OPEN solutionCost;
-OPEN solutionPoint;
+open solved;
+open solutioncost;
+open solutionpoint_array;
+open solutionpoint_table;
 --
-CALL LP.clean();
+call lp.clean();
 --
-END;
+end;
 /
 
-CREATE PROCEDURE test03 (
+create procedure test03 (
 )
-MODIFIES SQL DATA DYNAMIC RESULT SETS 3
+modifies sql data dynamic result sets 3
 --
-BEGIN ATOMIC
+begin atomic
 --
-DECLARE v_objective_coeffs DOUBLE ARRAY;
-DECLARE ok BOOLEAN;
+declare v_objective_coeffs double array;
+declare ok boolean;
 --
-DECLARE solutionCost CURSOR FOR SELECT LP.getSolutionCost() as SolutionCost FROM (VALUES(0));
-DECLARE solutionPoint CURSOR FOR SELECT LP.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
-DECLARE solved CURSOR FOR SELECT LP.solved() as solved FROM (VALUES(0));
+declare solutioncost cursor for select lp.getsolutioncost() as solutioncost from (values(0));
+declare solutionpoint cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solved cursor for select lp.solved() as solved from (values(0));
+declare solutionpoint_array cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solutionpoint_table cursor for select c2 as variable, c1 as value from unnest(lp.getsolutionpoint()) with ordinality;
 --
-SET v_objective_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
+set v_objective_coeffs = array[1.7792400000000002,0.30396,1.05214];
 --
-CALL LP.addLinearObjectiveFunction(v_objective_coeffs);
+call lp.addlinearobjectivefunction(v_objective_coeffs);
 --
-FOR SELECT coeffs, relationshipid, q FROM Restriction DO
+for select coeffs, relationshipid, q from restriction do
 --
-CALL LP.addLinearConstraint(coeffs, relationshipid, q);
+call lp.addlinearconstraint(coeffs, relationshipid, q);
 --
-END FOR;
+end for;
 --
-CALL LP.solve();
+call lp.solve();
 --
-SET ok = LP.solved();
+set ok = lp.solved();
 --
-IF ok THEN
+if ok then
 --
-CALL Message_insert('true');
+call message_insert('true');
 --
-ELSE
+else
 --
-CALL Message_insert('false');
+call message_insert('false');
 --
-END IF;
+end if;
 --
-OPEN solved;
-OPEN solutionCost;
-OPEN solutionPoint;
+open solved;
+open solutioncost;
+open solutionpoint_array;
+open solutionpoint_table;
 --
-CALL LP.clean();
+call lp.clean();
 --
-END;
+end;
 /
 
-call Relationship_insert(1,'>=');
+call relationship_insert(1,'>=');
 /
-call Relationship_insert(2,'<=');
+call relationship_insert(2,'<=');
 /
-call Relationship_insert(3,'=');
+call relationship_insert(3,'=');
 /
 --
-call Restriction_insert(1,'Protein, Complete Protein (g) = 100.0',3,100,ARRAY[0.3102,0,0]);
+call restriction_insert(1,'Protein, Complete Protein (g) = 100.0',3,100,array[0.3102,0,0]);
 /
-call Restriction_insert(2,'Energy, Digestible (kcal) = 2000.0',3,2000,ARRAY[1.7792400000000002,0.30396,1.05214]);
+call restriction_insert(2,'Energy, Digestible (kcal) = 2000.0',3,2000,array[1.7792400000000002,0.30396,1.05214]);
 /
-call Restriction_insert(3,'Carbohydrates, Fiber (g) = 40.0',3,40,ARRAY[0,0.033,0.018]);
+call restriction_insert(3,'Carbohydrates, Fiber (g) = 40.0',3,40,array[0,0.033,0.018]);
 /
 
-DELETE FROM Message;
+delete from message;
 /
 --pass
 call test01();

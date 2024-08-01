@@ -2,35 +2,35 @@ CREATE PROCEDURE clean()
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.clean'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.clean'
 /
 CREATE PROCEDURE addLinearObjectiveFunction(IN c DOUBLE ARRAY)
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.addLinearObjectiveFunction'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.addLinearObjectiveFunction'
 /
 CREATE PROCEDURE addLinearConstraint(IN c DOUBLE ARRAY, IN rel INT, IN amount DOUBLE)
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.addLinearConstraint'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.addLinearConstraint'
 /
 CREATE PROCEDURE solve()
 NO SQL
 LANGUAGE JAVA
 PARAMETER STYLE JAVA
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.solve'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.solve'
 /
 CREATE FUNCTION getSolutionPoint() RETURNS DOUBLE ARRAY
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.getSolutionPoint'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.getSolutionPoint'
 /
 CREATE FUNCTION getSolutionCost() RETURNS DOUBLE
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.getSolutionCost'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.getSolutionCost'
 /
 CREATE FUNCTION solved() RETURNS BOOLEAN
 LANGUAGE JAVA DETERMINISTIC NO SQL
-EXTERNAL NAME 'CLASSPATH:io.github.xjrga.dblp.LPModelStatic.solved'
+EXTERNAL NAME 'CLASSPATH:io.github.xjrga.databaselp.LPModelStatic.solved'
 /

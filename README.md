@@ -2,7 +2,7 @@ databaseLP (Experimental)
 
 Features:
 
-   - Solve linear programming problem using PL/SQL and Apache Commons Mathematics Library in HSQLDB 
+   - Solve linear programming problem using PL/SQL and Apache Commons Mathematics Library in HSQLDB
 
 Requirements:
 
@@ -10,7 +10,7 @@ Requirements:
 
 Build
 
-    04
+    05
 
 Authors
 
@@ -27,4 +27,4 @@ databaseLP uses the following libraries:
     commons-math3-3.6.1.jar
     hsqldb-2.7.3.jar
     sqltool-2.7.3.jar
-    dblp-04.jar
+    databaseLP-05.jar

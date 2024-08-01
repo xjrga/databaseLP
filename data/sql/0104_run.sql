@@ -1,4 +1,4 @@
-DELETE FROM Message;
+delete from message;
 /
 --pass
 call test01();

@@ -1,4 +1,4 @@
-package io.github.xjrga.dblp;
+package io.github.xjrga.databaselp;
 
 import java.sql.Array;
 import java.sql.SQLException;

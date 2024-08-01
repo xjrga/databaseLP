@@ -1,45 +1,48 @@
-CREATE PROCEDURE test03 (
+create procedure test03 (
 )
-MODIFIES SQL DATA DYNAMIC RESULT SETS 3
+modifies sql data dynamic result sets 3
 --
-BEGIN ATOMIC
+begin atomic
 --
-DECLARE v_objective_coeffs DOUBLE ARRAY;
-DECLARE ok BOOLEAN;
+declare v_objective_coeffs double array;
+declare ok boolean;
 --
-DECLARE solutionCost CURSOR FOR SELECT LP.getSolutionCost() as SolutionCost FROM (VALUES(0));
-DECLARE solutionPoint CURSOR FOR SELECT LP.getSolutionPoint() as SolutionPoint FROM (VALUES(0));
-DECLARE solved CURSOR FOR SELECT LP.solved() as solved FROM (VALUES(0));
+declare solutioncost cursor for select lp.getsolutioncost() as solutioncost from (values(0));
+declare solutionpoint cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solved cursor for select lp.solved() as solved from (values(0));
+declare solutionpoint_array cursor for select lp.getsolutionpoint() as solutionpoint from (values(0));
+declare solutionpoint_table cursor for select c2 as variable, c1 as value from unnest(lp.getsolutionpoint()) with ordinality;
 --
-SET v_objective_coeffs = ARRAY[1.7792400000000002,0.30396,1.05214];
+set v_objective_coeffs = array[1.7792400000000002,0.30396,1.05214];
 --
-CALL LP.addLinearObjectiveFunction(v_objective_coeffs);
+call lp.addlinearobjectivefunction(v_objective_coeffs);
 --
-FOR SELECT coeffs, relationshipid, q FROM Restriction DO
+for select coeffs, relationshipid, q from restriction do
 --
-CALL LP.addLinearConstraint(coeffs, relationshipid, q);
+call lp.addlinearconstraint(coeffs, relationshipid, q);
 --
-END FOR;
+end for;
 --
-CALL LP.solve();
+call lp.solve();
 --
-SET ok = LP.solved();
+set ok = lp.solved();
 --
-IF ok THEN
+if ok then
 --
-CALL Message_insert('true');
+call message_insert('true');
 --
-ELSE
+else
 --
-CALL Message_insert('false');
+call message_insert('false');
 --
-END IF;
+end if;
 --
-OPEN solved;
-OPEN solutionCost;
-OPEN solutionPoint;
+open solved;
+open solutioncost;
+open solutionpoint_array;
+open solutionpoint_table;
 --
-CALL LP.clean();
+call lp.clean();
 --
-END;
+end;
 /

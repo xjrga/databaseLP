@@ -1,31 +1,25 @@
-DROP SCHEMA LP IF EXISTS CASCADE;
-/
-CREATE SCHEMA LP;
-/
-SET SCHEMA LP;
-/
-CREATE TABLE Message
+create table message
 (
-        Txt LONGVARCHAR
+        txt longvarchar
 );
 /
-CREATE TABLE Relationship
+create table relationship
 (
-        relationshipId INTEGER,
-        name LONGVARCHAR,
-        CONSTRAINT Relationship_primary_key PRIMARY KEY (relationshipId)
+        relationshipid integer,
+        name longvarchar,
+        constraint relationship_primary_key primary key (relationshipid)
 );
 /
-CREATE TABLE Restriction
+create table restriction
 (
-        restrictionId INTEGER,
-        name LONGVARCHAR,
-        relationshipId INTEGER,
-        q DOUBLE,
-        coeffs DOUBLE ARRAY DEFAULT ARRAY[],
-        CONSTRAINT Restriction_primary_key PRIMARY KEY (restrictionId)
+        restrictionid integer,
+        name longvarchar,
+        relationshipid integer,
+        q double,
+        coeffs double array default array[],
+        constraint restriction_primary_key primary key (restrictionid)
 );
 /
 
-ALTER TABLE Restriction ADD CONSTRAINT R1_Restriction FOREIGN KEY (relationshipId) REFERENCES Relationship (relationshipId) ON DELETE SET NULL;
+alter table restriction add constraint r1_restriction foreign key (relationshipid) references relationship (relationshipid) on delete set null;
 /
